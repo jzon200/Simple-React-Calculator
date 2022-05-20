@@ -1,8 +1,16 @@
+import ButtonsGrid from "./components/ButtonsGrid";
+import MainConsole from "./components/MainConsole";
+import Layout from "./layout/Layout";
+import { AppContextProvider } from "./store/app-context";
+
 function App() {
   return (
-    <div className="grid place-items-center h-screen bg-blue-900 text-white text-7xl font-bold">
-      Hello World
-    </div>
+    <AppContextProvider>
+      <Layout>
+        <MainConsole />
+        <ButtonsGrid />
+      </Layout>
+    </AppContextProvider>
   );
 }
 
