@@ -25,7 +25,7 @@ const BUTTONS_INFO: Button[] = [
     label: "9",
   },
   {
-    label: "✕",
+    label: "×",
   },
   {
     label: "4",
