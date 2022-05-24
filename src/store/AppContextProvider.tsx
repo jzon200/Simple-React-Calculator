@@ -1,4 +1,5 @@
 import { ReactNode, useReducer } from "react";
+import { lastOperation, regexOperations } from "../constants";
 import AppContext, { AppContextInterface } from "./app-context";
 
 const ZERO_VALUE = 0;
@@ -22,62 +23,87 @@ type ACTIONTYPE =
   | { type: "input"; payload: string };
 
 function reducer(state: AppState, action: ACTIONTYPE) {
+  const currentExpression = state.expression;
+  const currentTotal = state.total;
+
   switch (action.type) {
     case "clear":
       return initialState;
     case "backspace":
+      // This will remove the last character in expression I it is still greater than 1,
+      // Otherwise, the expression is set to blank to avoid errors
       return {
         ...state,
         expression:
-          state.expression.length > 1 ? state.expression.slice(0, -1) : "",
+          currentExpression.length > 1 ? currentExpression.slice(0, -1) : "",
       };
     case "percentage":
       return {
-        total: state.total / 100,
-        expression: eval(`${state.total / 100}`),
+        ...state,
+        total: parseFloat(currentExpression),
+        expression: `${currentTotal / 100}`,
       };
     case "negate":
       return {
-        total: -Math.abs(state.total),
-        expression: eval(`-Math.abs(${state.total})`),
+        ...state,
+        total: -Math.abs(currentTotal),
       };
     case "input":
-      // TODO: Simplify the logic and clean the code
-      const lastCharacterIsOperation = /[+*\/-]/gi.test(
-        state.expression.slice(-1)
-      );
-      const inputIsOperation = /[+*\/-]/gi.test(action.payload);
-      let expression: string;
-      if (state.expression.length < 1 && inputIsOperation) {
-        expression = "0" + action.payload;
-      } else if (lastCharacterIsOperation && inputIsOperation) {
-        expression = state.expression.replace(/[+*\/-]$/, action.payload);
-      } else {
-        expression = state.expression + action.payload;
+      const currentInput = action.payload;
+      let newExpression: string;
+
+      // This prevents multiple floating point in expression
+      if (currentInput === "." && currentExpression.includes(".")) {
+        return {
+          ...state,
+        };
       }
+
+      // This checks if the last character is an operation e.g "+","-","×"
+      const lastCharacterIsOperation = regexOperations.test(
+        currentExpression.slice(-1)
+      );
+
+      // This checks if the input is an operation
+      const inputIsOperation = regexOperations.test(currentInput);
+
+      if (currentExpression.length < 1 && inputIsOperation) {
+        //* This adds "0" in expression if the first input is already an operation
+        newExpression = "0" + currentInput;
+      } else if (lastCharacterIsOperation && inputIsOperation) {
+        newExpression = currentExpression.replace(lastOperation, currentInput);
+      } else {
+        //* Otherwise, the current expression will concat the input naturally
+        newExpression = currentExpression + currentInput;
+      }
+
       return {
         ...state,
-        expression,
+        expression: newExpression,
       };
     case "evaluate":
-      let total: number;
+      let newTotal = currentTotal;
       try {
-        // this removes the last operation found on expression.
-        const regex = /[+*\/-]$/;
-        const removedOperations = state.expression.replace(regex, "");
-        total = eval(removedOperations) as number;
-      } catch (error) {
-        if (error instanceof SyntaxError) {
-          total = state.total;
-          console.log(error);
+        //* This will remove the last operation in expression, to evaluate correctly and avoid error
+        const removedOperations = currentExpression.replace(lastOperation, "");
+
+        //* This will only evaluate the expression, when there is an existing expression to avoid error
+        if (currentExpression.length > 0) {
+          //! eval function is bad, but i only used it for easy computation,
+          //! since it is a simple project 🥴
+          newTotal = eval(removedOperations) as number;
         } else {
-          total = NaN;
-          console.log(error);
+          // Otherwise, it will return a zero
+          newTotal = ZERO_VALUE;
         }
+      } catch (error) {
+        // This prevents the app from crashing, I will just log error here
+        console.log(error);
       }
+
       return {
         ...state,
-        total: state.expression.length > 0 ? total : 0,
+        total: newTotal,
       };
     default:
       throw new Error("Dispatch Action undefined!");
@@ -122,6 +148,7 @@ const AppContextProvider = (props: Props) => {
         dispatch({ type: "negate" });
         break;
       default:
+        //* This will automatically evaluate the expression for every input
         dispatch({ type: "input", payload: input });
         dispatch({ type: "evaluate" });
     }

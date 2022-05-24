@@ -1,68 +1,29 @@
-type Button = {
-  label: string;
+const ButtonsObj = {
+  clear: "C",
+  backspace: "⌫",
+  percentage: "%",
+  divide: "÷",
+  seven: "7",
+  eight: "8",
+  nine: "9",
+  multiply: "×",
+  four: "4",
+  five: "5",
+  six: "6",
+  minus: "−",
+  one: "1",
+  two: "2",
+  three: "3",
+  plus: "+",
+  negate: "±",
+  zero: "0",
+  point: ".",
+  equals: "=",
 };
 
-const BUTTONS_INFO: Button[] = [
-  {
-    label: "C",
-  },
-  {
-    label: "⌫",
-  },
-  {
-    label: "%",
-  },
-  {
-    label: "÷",
-  },
-  {
-    label: "7",
-  },
-  {
-    label: "8",
-  },
-  {
-    label: "9",
-  },
-  {
-    label: "×",
-  },
-  {
-    label: "4",
-  },
-  {
-    label: "5",
-  },
-  {
-    label: "6",
-  },
-  {
-    label: "−",
-  },
-  {
-    label: "1",
-  },
-  {
-    label: "2",
-  },
-  {
-    label: "3",
-  },
-  {
-    label: "+",
-  },
-  {
-    label: "±",
-  },
-  {
-    label: "0",
-  },
-  {
-    label: ".",
-  },
-  {
-    label: "=",
-  },
-];
+const regexOperations = /[+*/-]/;
+const lastCharOperation = /[+*/-]$/;
 
-export default BUTTONS_INFO;
+export { regexOperations, lastCharOperation as lastOperation };
+
+export default ButtonsObj;

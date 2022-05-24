@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import BUTTONS_INFO from "../constants";
+import ButtonsObj from "../constants";
 import AppContext from "../store/app-context";
 import Button from "./Button";
 
@@ -8,13 +8,13 @@ const ButtonsGrid = () => {
 
   return (
     <div className="grid grid-cols-4 gap-2 text-xl">
-      {BUTTONS_INFO.map((button, index) => (
+      {Object.values(ButtonsObj).map((button, index) => (
         <Button
           key={index}
           onClick={() => {
-            appContext.onClick(button.label);
+            appContext.onClick(button);
           }}
-          label={button.label}
+          text={button}
         />
       ))}
     </div>

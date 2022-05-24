@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { regexOperations } from "../constants";
 import AppContext from "../store/app-context";
 
 const MainConsole = () => {
@@ -6,20 +7,21 @@ const MainConsole = () => {
 
   return (
     <div className="relative p-4 pb-2 bg-zinc-300 text-5xl text-right font-medium mb-4">
-      <div className="absolute top-0 right-5 text-sm text-[gray]">
-        {/* TODO: Fixed the Error when used for negativity(±)*/}
-        {/* {/[+*\/-±]/.test(expression)
+      <div className="absolute top-0 right-5 text-base text-[gray]">
+        {/* This replace the operations displayed in UI */}
+        {regexOperations.test(expression)
           ? expression
               .replaceAll("-", "−")
               .replaceAll("*", "×")
               .replaceAll("/", "÷")
-          : expression} */}
-        {expression}
+          : expression}
       </div>
-      {total !== 0 && "="}
-      {total.toLocaleString(undefined, {
-        maximumFractionDigits: 4,
-      })}
+      <span className="inline-block max-w-full text-ellipsis whitespace-nowrap overflow-hidden">
+        {total !== 0 && "="}
+        {total.toLocaleString("en-US", {
+          maximumFractionDigits: 7,
+        })}
+      </span>
     </div>
   );
 };

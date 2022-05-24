@@ -1,5 +1,5 @@
 type Props = {
-  label: string;
+  text: string;
   onClick: () => void;
 };
 
@@ -10,7 +10,7 @@ const Button = (props: Props) => {
       className="grid place-items-center w-20 h-16 bg-gray-300 text-xl font-medium 
     hover:bg-gray-400 last-of-type:bg-blue-400 last-of-type:hover:bg-blue-500"
     >
-      {props.label}
+      {props.text}
     </button>
   );
 };
