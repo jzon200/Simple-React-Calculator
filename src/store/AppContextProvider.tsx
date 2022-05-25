@@ -1,5 +1,5 @@
 import { ReactNode, useReducer } from "react";
-import { lastOperation, regexOperations } from "../constants";
+import { lastCharOperation, regexOperations } from "../constants";
 import AppContext, { AppContextInterface } from "./app-context";
 
 const ZERO_VALUE = 0;
@@ -71,7 +71,10 @@ function reducer(state: AppState, action: ACTIONTYPE) {
         //* This adds "0" in expression if the first input is already an operation
         newExpression = "0" + currentInput;
       } else if (lastCharacterIsOperation && inputIsOperation) {
-        newExpression = currentExpression.replace(lastOperation, currentInput);
+        newExpression = currentExpression.replace(
+          lastCharOperation,
+          currentInput
+        );
       } else {
         //* Otherwise, the current expression will concat the input naturally
         newExpression = currentExpression + currentInput;
@@ -85,7 +88,10 @@ function reducer(state: AppState, action: ACTIONTYPE) {
       let newTotal = currentTotal;
       try {
         //* This will remove the last operation in expression, to evaluate correctly and avoid error
-        const removedOperations = currentExpression.replace(lastOperation, "");
+        const removedOperations = currentExpression.replace(
+          lastCharOperation,
+          ""
+        );
 
         //* This will only evaluate the expression, when there is an existing expression to avoid error
         if (currentExpression.length > 0) {

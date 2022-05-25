@@ -7,7 +7,7 @@ const MainConsole = () => {
 
   return (
     <div className="relative p-4 pb-2 bg-zinc-300 text-5xl text-right font-medium mb-4">
-      <div className="absolute top-0 right-5 text-base text-[gray]">
+      <div className="absolute top-0 right-5 text-base text-[gray] max-w-[90%] text-ellipsis whitespace-nowrap overflow-hidden">
         {/* This replace the operations displayed in UI */}
         {regexOperations.test(expression)
           ? expression

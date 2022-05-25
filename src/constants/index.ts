@@ -24,6 +24,6 @@ const ButtonsObj = {
 const regexOperations = /[+*/-]/;
 const lastCharOperation = /[+*/-]$/;
 
-export { regexOperations, lastCharOperation as lastOperation };
+export { regexOperations, lastCharOperation };
 
 export default ButtonsObj;
